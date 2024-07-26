@@ -8,7 +8,8 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
-      registerType: 'autoUpdate'
+      registerType: 'autoUpdate',
+      injectRegister: 'auto'
     })
   ],
   resolve: {

@@ -11,6 +11,7 @@ export default defineConfig({
     vue(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: ['favicon.svg', 'favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
       injectRegister: 'auto',
       manifest: {
         name: 'Bingo-Mania',
@@ -43,6 +44,7 @@ export default defineConfig({
       }
     })
   ],
+  base: 'bingo-mania',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

@@ -7,7 +7,7 @@ interface Player {
   n: string;
   g: string;
   o: string;
-  highlightedNumbers: string;
+  // highlightedNumbers: string;
 }
 
 interface Machine {
@@ -17,24 +17,26 @@ interface Machine {
   n: string;
   g: string;
   o: string;
-  highlightedNumbers: string;
+  // highlightedNumbers: string;
 }
 
-interface Board {
-  id: number;
-  highlightedNumbers: string;
-}
+// interface Board {
+//   id: number;
+//   highlightedNumbers: string;
+// }
 
 const db = new Dexie('BingoDatabase') as Dexie & {
   player: EntityTable<
     Player,
     'id'
   >;
-}
+};
 
 db.version(1).stores({
-  player: '++id, b, i, n, g, o, highlightedNumbers',
+  player: '++id, b, i, n, g, o'
 });
 
+const playerTable = db.table<Player, number>('player');
+
 export type { Player };
-export { db };
+export { db, playerTable };

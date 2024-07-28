@@ -31,7 +31,7 @@
   import { defineProps, ref, watch, type Ref } from 'vue';
   import { liveQuery } from 'dexie';
   import { useObservable, from } from '@vueuse/rxjs';
-  import { db, type Player } from '../db'; // Certifique-se de que Player está sendo exportado de db.ts
+  import { db, type Player, type Machine } from '../db'; // Certifique-se de que Player está sendo exportado de db.ts
   
   const columns = ['B', 'I', 'N', 'G', 'O'];
   
@@ -42,13 +42,21 @@
   });
   
   const isLoaded = ref(false);
-  const observableBingoTable = useObservable(
+  const observableBingoTablePlayer = useObservable(
     from(
       liveQuery(async () => {
         return await db.player.toArray();
       })
     )
   ) as Ref<Player[]>;
+
+    const observableBingoTableMachine = useObservable(
+    from(
+      liveQuery(async () => {
+        return await db.machine.toArray();
+      })
+    )
+  ) as Ref<Machine[]>;
   
   const bingoTable = ref<(number | null)[][]>([]);
   const generateTable = (numbers: number[]) => {
@@ -59,9 +67,22 @@
     return props.highlightedNumbers.includes(number);
   };
   
-  const addBoard = async (columnB: (number | null)[], columnI: (number | null)[], columnN: (number | null)[], columnG: (number | null)[], columnO: (number | null)[]) => {
+  const addBoardPlayer = async (columnB: (number | null)[], columnI: (number | null)[], columnN: (number | null)[], columnG: (number | null)[], columnO: (number | null)[]) => {
     try {
       await db.player.add({
+        b: columnB.join(','),
+        i: columnI.join(','),
+        n: columnN.join(','),
+        g: columnG.join(','),
+        o: columnO.join(',')
+      });
+    } catch (error) {
+      console.error("Error adding board to database:", error);
+    }
+  };
+  const addBoardMachine = async (columnB: (number | null)[], columnI: (number | null)[], columnN: (number | null)[], columnG: (number | null)[], columnO: (number | null)[]) => {
+    try {
+      await db.machine.add({
         b: columnB.join(','),
         i: columnI.join(','),
         n: columnN.join(','),
@@ -77,7 +98,11 @@
     isLoaded.value = true;
     await db.player.clear();
     bingoTable.value = generateTable(props.numbers);
-    await addBoard(bingoTable.value[0], bingoTable.value[1], bingoTable.value[2], bingoTable.value[3], bingoTable.value[4]);
+    if(props.titleCardGame === 'Jogador'){
+        await addBoardPlayer(bingoTable.value[0], bingoTable.value[1], bingoTable.value[2], bingoTable.value[3], bingoTable.value[4]);
+    }else {
+        await addBoardMachine(bingoTable.value[0], bingoTable.value[1], bingoTable.value[2], bingoTable.value[3], bingoTable.value[4]);
+    }
   };
   
   function distributeNumbers(number: number[]): (number | null)[][] {
@@ -127,24 +152,47 @@
     return table;
   }
   
-  watch(
-    observableBingoTable,
-    async (newVal: Player[]) => {
-      if (newVal && newVal.length > 0) {
-        const playerData = newVal[0];
-        bingoTable.value = [
-          playerData.b.split(',').map(Number),
-          playerData.i.split(',').map(Number),
-          playerData.n.split(',').map(Number),
-          playerData.g.split(',').map(Number),
-          playerData.o.split(',').map(Number)
-        ];
-      } else {
-        bingoTable.value = generateTable(props.numbers);
-        await addBoard(bingoTable.value[0], bingoTable.value[1], bingoTable.value[2], bingoTable.value[3], bingoTable.value[4]);
-      }
-    },
-    { immediate: true }
-  );
+  if(props.titleCardGame === 'Jogador'){
+      watch(
+        observableBingoTablePlayer,
+        async (newVal: Player[]) => {
+          if (newVal && newVal.length > 0) {
+            const playerData = newVal[0];
+            bingoTable.value = [
+              playerData.b.split(',').map(Number),
+              playerData.i.split(',').map(Number),
+              playerData.n.split(',').map(Number),
+              playerData.g.split(',').map(Number),
+              playerData.o.split(',').map(Number)
+            ];
+          } else {
+            bingoTable.value = generateTable(props.numbers);
+            await addBoardPlayer(bingoTable.value[0], bingoTable.value[1], bingoTable.value[2], bingoTable.value[3], bingoTable.value[4]);
+          }
+        },
+        { immediate: true }
+      );
+  } else { 
+      watch(
+        observableBingoTableMachine,
+        async (newVal: Machine[]) => {
+          if (newVal && newVal.length > 0) {
+            const machineData = newVal[0];
+            bingoTable.value = [
+              machineData.b.split(',').map(Number),
+              machineData.i.split(',').map(Number),
+              machineData.n.split(',').map(Number),
+              machineData.g.split(',').map(Number),
+              machineData.o.split(',').map(Number)
+            ];
+          } else {
+            bingoTable.value = generateTable(props.numbers);
+            await addBoardMachine(bingoTable.value[0], bingoTable.value[1], bingoTable.value[2], bingoTable.value[3], bingoTable.value[4]);
+          }
+        },
+        { immediate: true }
+      );
+  }
+  
   </script>
   

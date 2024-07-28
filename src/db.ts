@@ -30,13 +30,18 @@ const db = new Dexie('BingoDatabase') as Dexie & {
     Player,
     'id'
   >;
+  machine: EntityTable<
+    Machine,
+    'id'
+  >;
 };
 
 db.version(1).stores({
-  player: '++id, b, i, n, g, o'
+  player: '++id, b, i, n, g, o',
+  machine: '++id, b, i, n, g, o',
 });
 
 const playerTable = db.table<Player, number>('player');
 
-export type { Player };
+export type { Player, Machine };
 export { db, playerTable };

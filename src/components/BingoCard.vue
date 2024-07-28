@@ -1,12 +1,12 @@
 <template>
     <v-col md="5">
-        <v-card>
+        <v-card class="bg-grey-lighten-3">
             <v-card-title :key="titleCardGame">
                 <h3>
                     {{ titleCardGame }}
                 </h3>
             </v-card-title>
-            <v-card-text>
+            <v-card-text style="padding: 0.4rem !important">
                 <thead>
                     <tr>
                         <th v-for="col in columns" key="col">{{ col }}</th>
@@ -15,7 +15,7 @@
                 <tbody>
                     <tr v-for="(row) in bingoTable" key="rowIndex">
                         <td v-for="(num, colIndex) in row" :key="colIndex" class="px-2 py-2">
-                            <v-btn :class="{'bg-yellow' : isHighlighted(num)}">
+                            <v-btn :class="{'bg-yellow' : isHighlighted(num ?? 0)}">
                                 {{ num }}
                             </v-btn>
                         </td>

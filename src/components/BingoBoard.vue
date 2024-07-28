@@ -7,11 +7,6 @@
         
           <h2 class="mb-2 ml-2">Números Chamados</h2>
         
-        
-          <div class="number-call mr-2">
-            <h3 class="text-center pt-2"></h3>
-          </div>
-        
         </v-row>
         <v-row>
           <v-col

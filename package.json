@@ -12,6 +12,9 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@vueuse/rxjs": "^10.11.0",
+    "dexie": "^4.0.8",
+    "rxjs": "^7.8.1",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
     "vuetify": "^3.6.13"

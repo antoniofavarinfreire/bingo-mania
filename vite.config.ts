@@ -21,22 +21,22 @@ export default defineConfig({
         theme_color: '#000000',
         icons: [
           {
-            src: '/android-chrome-192x192.png',
+            src: '/bingo-mania/android-chrome-192x192.png',
             type: 'image/png',
             sizes: '192x192'
           },
           {
-            src: '/android-chrome-512x512.png',
+            src: '/bingo-mania/android-chrome-512x512.png',
             type: 'image/png',
             sizes: '512x512'
           },
           {
-            src: '/favicon-16x16.png',
+            src: '/bingo-mania/favicon-16x16.png',
             type: 'image/png',
             sizes: '16x16'
           },
           {
-            src: '/favicon-32x32.png',
+            src: '/bingo-mania/favicon-32x32.png',
             type: 'image/png',
             sizes: '32x32'
           }
